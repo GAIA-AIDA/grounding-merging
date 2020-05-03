@@ -25,13 +25,8 @@ from aida_interchange.bounding_box import Bounding_Box
 #############
 
 # Specify data paths
-LDC2019E42 = '/root/LDC2019E42/'
-shared = '/root/shared/'
-
-
-# Initialization
-corpus_path = LDC2019E42
-working_path = shared + 'cu_visual_grounding_shared/'
+corpus_path = '/root/LDC/'
+working_path = shared + '/root/shared/'
 
 
 # Version Setting
