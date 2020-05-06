@@ -27,15 +27,9 @@ config = tf.ConfigProto(gpu_options=gpu_options,log_device_placement=True,allow_
 #############
 
 # Specify data paths
-LDC2019E42 = '/root/LDC2019E42/'
-shared = '/root/shared/'
-models = '/root/models/'
-
-
-# Initialization
-corpus_path = LDC2019E42
-working_path = shared + 'cu_visual_grounding_shared/'
-model_path = models + 'cu_visual_grounding_models/'
+corpus_path = '/root/LDC/'
+working_path = shared + '/root/shared/'
+model_path = models + '/root/models/'
 
 
 # Version Setting
