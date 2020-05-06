@@ -53,12 +53,12 @@ parent_dict, child_dict = utils.create_dict(parent_child_tab)
 
 
 # CU visual grounding feature paths
-out_path_jpg = working_path + 'cu_grounding_matching_features/' + 'semantic_features_jpg.lmdb'
-out_path_kfrm = working_path + 'cu_grounding_matching_features/' + 'semantic_features_keyframe.lmdb'
+sem_img_path = working_path + 'cu_grounding_matching_features/' + 'semantic_features_jpg.lmdb'
+sem_kfrm_path = working_path + 'cu_grounding_matching_features/' + 'semantic_features_keyframe.lmdb'
 
 # CU instance matching feature paths
-out_path_jpg = working_path + 'cu_grounding_matching_features/' + 'instance_features_jpg.lmdb'
-out_path_kfrm = working_path + 'cu_grounding_matching_features/' + 'instance_features_keyframe.lmdb'
+ins_img_path = working_path + 'cu_grounding_matching_features/' + 'instance_features_jpg.lmdb'
+ins_kfrm_path = working_path + 'cu_grounding_matching_features/' + 'instance_features_keyframe.lmdb'
 
 # CU visual grounding result path
 grounding_dict_path = working_path + 'cu_grounding_results/' + version_folder + 'grounding_dict_'+p_f_run+'.pickle'
