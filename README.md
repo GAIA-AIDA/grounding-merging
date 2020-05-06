@@ -14,7 +14,15 @@ Local development environment:
   - Anaconda 3-4.4  
   - Tensorflow 1.12.0  
 
-Using Docker
+Running Docker
+
+```
+$ docker pull gaiaaida/grounding-merging
+$ docker images
+$ docker run -it --gpus 1 --name aida-grounding-merging -v /data/cu_visual_grounding_shared/:/root/shared -v /data/cu_visual_grounding_models/:/root/models -v /LDC2019E42_AIDA_Phase_1_Evaluation_Source_Data_V1.0/:/root/LDC/ gaiaaida/grounding-merging /bin/bash
+```
+
+Building Docker
 
 ```
 $ docker build . --tag columbia-gm
