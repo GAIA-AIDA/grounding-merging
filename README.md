@@ -73,18 +73,13 @@ processes_num = 32
 ##### TA1
 
 Specify data paths
-
-```
-LDC2019E42=/path/expanded/ldc/
-dryrun=/diff/path/
-
 AVAILABLE_GPU=0
 models=/path-to-models/
 shared=/path-shared-data/
 
-corpus_path = '/root/LDC/'
-working_path = shared + '/root/shared/'
-model_path = models + '/root/models/'
+```
+working_path = shared + 'cu_visual_grounding_shared/'
+model_path = models + 'cu_visual_grounding_models/'
 ```
 
 
