@@ -26,15 +26,9 @@ config = tf.ConfigProto(gpu_options=gpu_options,log_device_placement=True,allow_
 #############
 
 # Specify data paths
-LDC2019E42 = '/root/LDC2019E42/'
-shared = '/root/shared/'
-models = '/root/models/'
-
-
-# Initialization
-corpus_path = LDC2019E42
-working_path = shared + 'cu_visual_grounding_shared/'
-model_path = models + 'cu_visual_grounding_models/'
+corpus_path = '/root/LDC/'
+working_path = shared + '/root/shared/'
+model_path = models + '/root/models/'
 
 
 # Version Setting
@@ -381,7 +375,7 @@ for k,entity in enumerate(en_to_img_dict):
     sys.stdout.flush() 
 
 # saving as a temporal file
-grounding_dict_path_tmp = grounding_dict_path_tmp + '.' + suffix_tmp +'.tmp'
+grounding_dict_path_tmp = 'grounding_dict_path_tmp' + '.' + suffix_tmp +'.tmp'
 with open(grounding_dict_path_tmp, 'wb') as f:
     pickle.dump(en_to_img_dict,f, protocol=pickle.HIGHEST_PROTOCOL)
 print('Clustering done.', 'grounding_dict.tmp len:',len(en_to_img_dict))

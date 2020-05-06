@@ -18,7 +18,7 @@ Using Docker
 
 ```
 $ docker build . --tag columbia-gm
-$ docker run -itd --gpus 1 --name aida-gm -v /scratch/napiersk/home/src2/bobby/data/data_bobby:/root/data -v /scratch/napiersk/columbia/feb11:/root/dryrun/data -v /scratch/napiersk/columbia/isi_corpus_docs_m18_evaluation/docs:/root/dryrun/docs columbia-gm /bin/bash
+$ $ docker run -it --gpus 1 --name grounding-merging -v /cu_visual_grounding_shared/:/root/shared -v /cu_visual_grounding_models/:/root/models -v /LDC2019E42_AIDA_Phase_1_Evaluation_Source_Data_V1.0/:/root/LDC2019E42/ columbia-gm /bin/bash
 $ docker exec -it aida-gm /bin/bash
 # python smoke_test.py
 # python Feature_Extraction.py
@@ -76,8 +76,8 @@ Specify data paths
 AVAILABLE_GPU=0
 models=/path-to-models/
 shared=/path-shared-data/
+
 ```
-corpus_path = LDC2019E42
 working_path = shared + 'cu_visual_grounding_shared/'
 model_path = models + 'cu_visual_grounding_models/'
 ```
@@ -95,22 +95,18 @@ File List:
 
 ```
 root
-  to: working_path = shared_root + 'cu_visual_grounding_shared/'
-  from: corpus_path = '/root/dryrun/'
-  to: corpus_path = LDC2019E42
+  working_path = shared + '/root/shared/'
+  corpus_path = LDC2019E42
 model
-  from: model/
-  to: model_path = models_root + 'cu_visual_grounding_models/'
+  model_path = models + '/root/models/'
 shared
-  from: /objdet_results/, rpi_ttl/,raw_files/, tmp/, usc_dict/, /cu_ttl,/merged_ttl
-  to: /cu_objdet_results/, uiuc_ttl_results/,uiuc_asr_files/, cu_grounding_dict_files, usc_grounding_dict/, /cu_ttl_tmp,/cu_graph_merging_ttl
+  /cu_objdet_results/, uiuc_ttl_results/,uiuc_asr_files/, cu_grounding_dict_files, usc_grounding_dict/, /cu_ttl_tmp,/cu_graph_merging_ttl
 local
-  from: all_features/
-  to: cu_grounding_matching_features/, cu_grounding_results/
+  cu_grounding_matching_features/, cu_grounding_results/
 ```
 #### 2. Input Data Download  
 ```
-    Download the data folders from GoogleDrive (model_data_bobby/data/cu_visual_grounding_shared/, model_data_bobby/data/cu_visual_grounding_models/), and the folders save as working_path and model_path.
+    Download the data folders from GoogleDrive (/data/cu_visual_grounding_shared/, /data/cu_visual_grounding_models/), and the folders save as working_path and model_path.
 ```  
 File List:  
 [UIUC] 3 files (from Manling)  
@@ -119,38 +115,38 @@ File List:
     cu_visual_grounding_shared/uiuc_ttl_results/
     cu_visual_grounding_shared/uiuc_asr_files/
 ```  
-[CU obj_det] files (from Alireza)   
+[CU obj_det] files (from CU_obj)   
 ```
     cu_visual_grounding_shared/cu_objdet_results/
 ```  
-[USC] files (from Arka)   
+[USC] files (from USC)   
 ```
     cu_visual_grounding_shared/usc_grounding_dict/
 ```  
-[CU clustering] files (from Brian)
+[CU clustering] files (from CU_face)
 ```
     cu_visual_grounding_shared/cu_ttl_tmp/
 ```  
 
-[Model] files (from Bobby)    
+[Model] files (from CU_gm)    
 ```
     cu_visual_grounding_models/
 ```
 
 #### 3. Results or Intermediate Data Download for Module Testing  
-[CU Visual_Features] files (from Bobby)  
+[CU Visual_Features] files (from CU_gm)  
 ```
     cu_visual_grounding_shared/cu_grounding_matching_features/
 ```
-[CU Grounding] files (from Bobby)  
+[CU Grounding] files (from CU_gm)  
 ```
     cu_visual_grounding_shared/cu_grounding_results/
 ```
-[CU Dictionary] files (from Bobby)
+[CU Dictionary] files (from CU_gm)
 ```
     cu_visual_grounding_shared/cu_grounding_dict_files/
 ```
-[CU Merging] files (from Bobby) 
+[CU Merging] files (from CU_gm) 
 ```
     do not need to use for testing
 ```
