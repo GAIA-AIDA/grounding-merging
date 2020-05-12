@@ -27,8 +27,8 @@ config = tf.ConfigProto(gpu_options=gpu_options,log_device_placement=True,allow_
 
 # Specify data paths
 corpus_path = '/root/LDC/'
-working_path = shared + '/root/shared/'
-model_path = models + '/root/models/'
+working_path = '/root/shared/'
+model_path = '/root/models/'
 
 
 # Version Setting
