@@ -26,7 +26,7 @@ from aida_interchange.bounding_box import Bounding_Box
 
 # Specify data paths
 corpus_path = '/root/LDC/'
-working_path = shared + '/root/shared/'
+working_path = '/root/shared/'
 
 
 # Version Setting
