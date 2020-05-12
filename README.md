@@ -1,32 +1,31 @@
 
-# Visual Grounding and Graph Merging for AIDA Project
-
-#### Source provided by Bo Wu (Bobby) Columbia University
+# Visual Grounding and Graph Merging
+#### GAIA-AIDA: Columbia Vision Pipeline (Visual Grounding and Graph Merging)
+#### Source provided by Bo Wu (Bobby), Columbia University (CU)
 
 #### 3 Main Modules: Feature Extraction, Visual Grounding and Instance Matching, Graph Merging
 
-### A. Overview  
+## A. Overview of Columbia University Vision Pipeline
 ![image](architecture.png)
 
-### B. Environment Installation
+## B. Environment Installation
 Local development environment:
   - Python 3.6.3   
   - Anaconda 3-4.4  
   - Tensorflow 1.12.0  
 
-Running Docker
-
+Running Docker (mapping the downloaded paths to the /root/models/, /root/shared/, and /root/LDC/)
 ```
 $ docker pull gaiaaida/grounding-merging
 $ docker images
-$ docker run -it --gpus 1 --name aida-grounding-merging -v /data/cu_visual_grounding_shared/:/root/shared -v /data/cu_visual_grounding_models/:/root/models -v /LDC2019E42_AIDA_Phase_1_Evaluation_Source_Data_V1.0/:/root/LDC/ gaiaaida/grounding-merging /bin/bash
+$ docker run -it --gpus 1 --name aida-grounding-merging -v /columbia_data_root/columbia_vision_shared/:/root/shared -v /columbia_data_root/columbia_visual_grounding_models/:/root/models -v /LDC2019E42_AIDA_Phase_1_Evaluation_Source_Data_V1.0/:/root/LDC/ gaiaaida/grounding-merging /bin/bash
 ```
 
 Building Docker
 
 ```
 $ docker build . --tag columbia-gm
-$ $ docker run -it --gpus 1 --name grounding-merging -v /cu_visual_grounding_shared/:/root/shared -v /cu_visual_grounding_models/:/root/models -v /LDC2019E42_AIDA_Phase_1_Evaluation_Source_Data_V1.0/:/root/LDC2019E42/ columbia-gm /bin/bash
+$ $ docker run -it --gpus 1 --name grounding-merging -v /columbia_vision_shared/:/root/shared -v /columbia_visual_grounding_models/:/root/models -v /LDC2019E42_AIDA_Phase_1_Evaluation_Source_Data_V1.0/:/root/LDC2019E42/ columbia-gm /bin/bash
 $ docker exec -it aida-gm /bin/bash
 # python smoke_test.py
 # python Feature_Extraction.py
@@ -43,24 +42,24 @@ $ docker exec -it aida-gm /bin/bash
 $ docker exec -it aida-gm /bin/bash
 $$ python ./Feature_Extraction.py
 $$ echo expect to see get [CU Visual_Features] files:
-cu_visual_grounding_shared/cu_grounding_matching_features/semantic_features_jpg.lmdb, semantic_features_keyframe.lmdb, instance_features_jpg.lmdb, instance_features_keyframe.lmdb
-$$ echo expect to see get [CU Grounding] file: cu_visual_grounding_shared/cu_grounding_results/E/grounding_dict_E1.pickle
+columbia_vision_shared/cu_grounding_matching_features/semantic_features_jpg.lmdb, semantic_features_keyframe.lmdb, instance_features_jpg.lmdb, instance_features_keyframe.lmdb
+$$ echo expect to see get [CU Grounding] file: columbia_vision_shared/cu_grounding_results/E/grounding_dict_E1.pickle
 $$ python ./Visual_Grounding_mp.py
-$$ echo expect to see get [CU Dictionary] files for USC: 'cu_visual_grounding_shared/cu_grounding_dict_files/E/entity2mention_dict_E1.pickle', 'cu_visual_grounding_shared/cu_grounding_dict_files/E/id2mentions_dict_E1.pickle'
+$$ echo expect to see get [CU Dictionary] files for USC: 'columbia_vision_shared/cu_grounding_dict_files/E/entity2mention_dict_E1.pickle', 'columbia_vision_shared/cu_grounding_dict_files/E/id2mentions_dict_E1.pickle'
 $$ python ./Graph Merging.py
-$$ echo expect to see get [CU Merging] files: 'cu_visual_grounding_shared/cu_graph_merging_ttl/merged_ttl_E1/ 
+$$ echo expect to see get [CU Merging] files: 'columbia_vision_shared/cu_graph_merging_ttl/merged_ttl_E1/ 
 
 ```
 
-##### The 3 main steps should be run one by one: 
+#### The 3 main steps should be run one by one: 
 
 1. Feature_Extraction.ipynb
 2. Visual_Grounding_mp.ipynb
 3. Graph_Merging.ipynb 
 
-The steps associates with "feature_extraction", "grounding and instance matching" and "graph merging" parts.
+The steps associates with "feature extraction", "visual grounding and instance matching" and "graph merging" parts.
 
-There is one thing need to be noticed when you run the grounding part. Because our system will merge the grounding results from both CU and USC. So the first step is to generate the immediate dictionary files for USC, and then get the grounding results  (as dictionary object) from them. Finally, the system will merge two types of grounding results.
+[Optional] There is one thing need to be noticed if you also want to merge the grounding results from USC: The first step is to generate the immediate dictionary files for USC grounding. Then run the USC grounding part and get the grounding results (as dictionary object) from USC branch. Finally, our system can use two types of grounding results.
 
 ### C. Parameter Setting  
 Grounding score threshold: 0.85  
@@ -76,90 +75,93 @@ uiuc_run_folder = 'RPI_TA1_E1/'
 processes_num = 32
 ```
 
-### D. Dataset Download  
+## D. Dataset Download  
 
-##### TA1
-
-Specify data paths
-AVAILABLE_GPU=0
-models=/path-to-models/
-shared=/path-shared-data/
-
+#### 1. Corpus Data Download (one example of the input data) 
 ```
-working_path = shared + 'cu_visual_grounding_shared/'
-model_path = models + 'cu_visual_grounding_models/'
-```
-
-
-
-#### 1. Corpus Data Download  
-```
-    download the folder /docs/ from GoogleDrive (/isi_corpus_docs_m18_evaluation/), saved as corpus_path+'/docs'
-    download the folder /data/ from GoogleDrive (/isi_corpus_data_m18_evaluation/), saved as corpus_path+'/data'
+    Download the folder of the LDC corpus data (https://github.com/isi-vista/aida-integration).
 ```  
 File List:  
-[LDC] 3 files (from ISI, sorted by Manling)  
+[LDC] 3 files (from ISI, sorted by UIUC)  
 [LTF] file (from ISI)
 
+
+
+#### 2. Other Data and Models Download  
 ```
-root
-  working_path = shared + '/root/shared/'
-  corpus_path = LDC2019E42
-model
-  model_path = models + '/root/models/'
-shared
-  /cu_objdet_results/, uiuc_ttl_results/,uiuc_asr_files/, cu_grounding_dict_files, usc_grounding_dict/, /cu_ttl_tmp,/cu_graph_merging_ttl
-local
-  cu_grounding_matching_features/, cu_grounding_results/
-```
-#### 2. Input Data Download  
-```
-    Download the data folders from GoogleDrive (/data/cu_visual_grounding_shared/, /data/cu_visual_grounding_models/), and the folders save as working_path and model_path.
+    Download Link: https://drive.google.com/drive/folders/1JQak5s31I4nwGNASpOQ_GbQpJuS85lFr?usp=sharing    
+    Download the shared folders (/columbia_data_root/columbia_vision_shared/) and the visual grounding model files (/columbia_data_root/columbia_visual_grounding_models/) for visual grounding, instance matching and graph merging.
 ```  
-File List:  
-[UIUC] 3 files (from Manling)  
+- Data Structure
 ```
-    # Download from GoogleDrive
-    cu_visual_grounding_shared/uiuc_ttl_results/
-    cu_visual_grounding_shared/uiuc_asr_files/
+columbia_data_root
+├── columbia_vision_shared
+│   ├── cu_objdet_results
+│   ├── cu_grounding_matching_features
+│   ├── cu_grounding_results
+│   ├── uiuc_ttl_results
+│   ├── uiuc_asr_files
+│   ├── cu_grounding_dict_files
+│   ├── cu_ttl_tmp
+│   ├── cu_graph_merging_ttl
+│   └── ...
+└── columbia_visual_grounding_models
+```
+
+
+- Specify data paths
+```
+#AVAILABLE_GPU=0
+corpus_path = '/root/LDC/' # set /root/LDC/ as the corpus data path
+working_path = '/root/shared/' # set /root/shared/ as the shared folder path
+model_path = '/root/models/' # set /root/models/ as the model folder path
+```
+
+
+
+File List:  
+[UIUC] 3 files (from UIUC)  
+```
+    columbia_vision_shared/uiuc_ttl_results/
+    columbia_vision_shared/uiuc_asr_files/
 ```  
 [CU obj_det] files (from CU_obj)   
 ```
-    cu_visual_grounding_shared/cu_objdet_results/
+    columbia_vision_shared/cu_objdet_results/
 ```  
 [USC] files (from USC)   
 ```
-    cu_visual_grounding_shared/usc_grounding_dict/
+    columbia_vision_shared/usc_grounding_dict/
 ```  
 [CU clustering] files (from CU_face)
 ```
-    cu_visual_grounding_shared/cu_ttl_tmp/
+    columbia_vision_shared/cu_ttl_tmp/
 ```  
 
 [Model] files (from CU_gm)    
 ```
-    cu_visual_grounding_models/
+    columbia_visual_grounding_models/
 ```
 
 #### 3. Results or Intermediate Data Download for Module Testing  
 [CU Visual_Features] files (from CU_gm)  
 ```
-    cu_visual_grounding_shared/cu_grounding_matching_features/
+    columbia_vision_shared/cu_grounding_matching_features/
 ```
 [CU Grounding] files (from CU_gm)  
 ```
-    cu_visual_grounding_shared/cu_grounding_results/
+    columbia_vision_shared/cu_grounding_results/
 ```
 [CU Dictionary] files (from CU_gm)
 ```
-    cu_visual_grounding_shared/cu_grounding_dict_files/
+    columbia_vision_shared/cu_grounding_dict_files/
 ```
 [CU Merging] files (from CU_gm) 
 ```
     do not need to use for testing
 ```
 
-### E. Required Input/Result Output of Each Module  
+## E. Required Input/Result Output of Each Module  
 
 #### 1. Feature Extraction  
 #### Input:   
@@ -232,7 +234,7 @@ File List:
 ```
 
 
-#### 3. Graph Merging  
+### 3. Graph Merging  
 #### Input:    
 [LDC] 3 files  
 ```
@@ -266,7 +268,7 @@ File List:
     merged_graph_path = working_path + 'cu_graph_merging_ttl/' + version_folder + 'merged_ttl_'+ p_f_run + '/'
 ```
 
-### F. Main Steps of Running  
+## F. Main Steps of Running  
 #### Feature Extraction  
 get the data from [UIUC] and [CU obj_det]  
 Run feature extraction program   
@@ -282,13 +284,12 @@ Check grounding dict result
 Check grounded entities and clusters  
 Check the prefix for entity (columbia or usc ..)  
 Check merged_ttl by validator on local server pineapple    
-Output: /data/merged_ttl/  
+Output: /columbia_vision_shared/merged_ttl/  
 
-### G. Grounding Example  
+### Grounding Example  
 CU grounding_dict file  
 
 ```
-
 'http://www.isi.edu/gaia/entities/c5649544-38d8-4e28-b104-af431556a1a1':{  
   'textual_features':array(  [  ],
   dtype=float32),
@@ -308,39 +309,38 @@ CU grounding_dict file
       'name':'Lavrov  Lavrov ',
       'sentence':'Lavrov  Lavrov  in the image'
     }
-
-Examples for [CU ttl]:
-IC0011VEA.ttl
-IC00165CE HC000SYGU_16.mp4.ldcc 
-
-'IC00121KF.jpg.ldcc':{  
-          'bbox':[  ],
-          'bbox_norm':[  ],
-          'bbox_score':[  
-            0.6378487
-          ],
-          'heatmap':array(          [  ],
-          dtype=float32),
-          'sen-img-score':0.62081313,
-          'men-img-score':array(          [  ],
-          dtype=float32),
-          'grounding_features':array(          [  ],
-          dtype=float32)
-        },
-
 ```
+
+## G. References
+## References
+
+- [GAIA: A Fine-grained Multimedia Knowledge Extraction System](http://www.ee.columbia.edu/ln/dvmm/publications/20/aidaacl2020demo.pdf).
+  Manling Li, Alireza Zareian, Ying Lin, Xiaoman Pan, Spencer Whitehead, Brian Chen, Bo Wu, Heng Ji, Shih-Fu Chang, Clare Voss, Daniel Napierski and Marjorie Freedman
+  Proc. The 58th Annual Meeting of the Association for Computational Linguistics (ACL2020) Demo Track
+
+- [GAIA at SM-KBP 2019 - A Multi-media Multi-lingual Knowledge Extraction and Hypothesis Generation System](https://blender.cs.illinois.edu/paper/gaia_smkbp_2019.pdf).
+  Manling Li, Ying Lin, Ananya Subburathinam, Spencer Whitehead, Xiaoman Pan, Di Lu, Qingyun Wang, Tongtao Zhang, Lifu Huang, Heng Ji, Alireza Zareian, Hassan Akbari, Brian Chen, Bo Wu, Emily Allaway,Shih-Fu Chang, Kathleen McKeown, Yixiang Yao, Jennifer Chen, Eric Berquist, Kexuan Sun, Xujun Peng, Ryan GabbardMarjorie Freedman, Pedro Szekely, T.K. Satish Kumar, Arka Sadhu, Ram Nevatia, Miguel Rodriguez, Yifan Wang, Yang Bai, Ali Sadeghian, Daisy Zhe Wang
+  Proc. Text Analysis Conference (TAC2019)
+
+- [GAIA - A Multi-media Multi-lingual Knowledge Extraction and Hypothesis Generation System](http://nlp.cs.rpi.edu/paper/gaia2018.pdf).
+  Tongtao Zhang, Ananya Subburathinam, Ge Shi, Lifu Huang, Di Lu, Xiaoman Pan, Manling Li, Boliang Zhang, Qingyun Wang, Spencer Whitehead, Heng Ji, Alireza Zareian, Hassan Akbari, Brian Chen, Ruiqi Zhong, Steven Shao, Emily Allaway, Shih-Fu Chang, Kathleen McKeown, Dongyu Li, Xin Huang, Xujun Peng, Ryan Gabbard, Marjorie Freedman, Ali Sadeghian, Mayank Kejriwal, Ram Nevatia, Pedro Szekely, Ali Sadeghian and Daisy Zhe Wang
+  Proc. Text Analysis Conference (TAC2018)
+
+- [Multi-level Multimodal Common Semantic Space for Image-Phrase Grounding](https://arxiv.org/pdf/1811.11683.pdf).
+  Hassan Akbari, Svebor Karaman, Surabhi Bhargava, Brian Chen, Carl Vondrick, and Shih-Fu Chang  
+  In IEEE International Conference on Computer Vision and Pattern Recognition (CVPR2019)
 
 ### Updates
 
 #### 2020.03.26 Update Paths
 ```
 root
-  to: working_path = shared_root + 'cu_visual_grounding_shared/'
+  to: working_path =  '/root/'
   from: corpus_path = '/root/dryrun/'
-  to: corpus_path = LDC2019E42
+  to: corpus_path = '/root/LDC'
 model
   from: model/
-  to: model_path = models_root + 'cu_visual_grounding_models/'
+  to: model_path = models_root + 'columbia_visual_grounding_models/'
 shared
   from: /objdet_results/, rpi_ttl/,raw_files/, tmp/, usc_dict/, /cu_ttl,/merged_ttl
   to: /cu_objdet_results/, uiuc_ttl_results/,uiuc_asr_files/, cu_grounding_dict_files, usc_grounding_dict/, /cu_ttl_tmp,/cu_graph_merging_ttl
