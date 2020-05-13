@@ -7,12 +7,12 @@
 
 ## A. Overview of Columbia University Vision Pipeline
 ![image](architecture.png)
-You can find the modules for Columbia University Vision Pipeline by following links:
-[CU Grounding and Merging](https://github.com/GAIA-AIDA/grounding-merging)
-[CU Object Detection](https://github.com/GAIA-AIDA/object-detection)
-[CU Face/Flag/Landmark Recognition](https://github.com/GAIA-AIDA/face-building)
-UIUC Text Pipeline
-USC Grounding [Optional]
+You can find the module containers for Columbia University Vision Pipeline by following links:
+[CU Grounding and Merging](https://hub.docker.com/r/dannapierskitoptal/aida-grounding-merging), 
+[CU Object Detection](https://hub.docker.com/r/dannapierskitoptal/aida-object-detection), 
+[CU Face/Flag/Landmark Recognition](https://hub.docker.com/r/dannapierskitoptal/aida-face-building), 
+[UIUC Text Pipeline](https://github.com/isi-vista/aida_pipeline/tree/manling), 
+[USC Grounding](https://github.com/isi-vista/aida_detect_ground) [Optional]
 
 ## B. Environment Installation
 Local development environment:
