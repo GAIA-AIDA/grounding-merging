@@ -3,10 +3,16 @@
 #### GAIA-AIDA: Columbia Vision Pipeline (Visual Grounding and Graph Merging)
 #### Source provided by Bo Wu (Bobby), Columbia University (CU)
 
-#### 3 Main Modules: Feature Extraction, Visual Grounding and Instance Matching, Graph Merging
+#### Main Modules: Feature Extraction, Visual Grounding and Instance Matching, Graph Merging
 
 ## A. Overview of Columbia University Vision Pipeline
 ![image](architecture.png)
+You can find the modules for Columbia University Vision Pipeline by following links:
+[CU Grounding and Merging](https://github.com/GAIA-AIDA/grounding-merging)
+[CU Object Detection](https://github.com/GAIA-AIDA/object-detection)
+[CU Face/Flag/Landmark Recognition](https://github.com/GAIA-AIDA/face-building)
+UIUC Text Pipeline
+USC Grounding [Optional]
 
 ## B. Environment Installation
 Local development environment:
