@@ -59,7 +59,7 @@ $$ echo expect to see get [CU Merging] files: 'columbia_vision_shared/cu_graph_m
 
 The steps associates with "feature extraction", "visual grounding and instance matching" and "graph merging" parts.
 
-[Optional] There is one thing need to be noticed if you also want to merge the grounding results from USC: The first step is to generate the immediate dictionary files for USC grounding. Then run the USC grounding part and get the grounding results (as dictionary object) from USC branch. Finally, our system can use two types of grounding results.
+[Optional Setting] Running the modules of Columbia University only does not require to run USC branch, the merging steps for USC grounding in Visual_Grounding_mp.py can be commented. But if you want to merge the grounding results from USC, please keep the merging steps in the code for USC grounding and follow these steps: 1. Generating the immediate dictionary files by run Visual_Grounding_mp.py as input for USC grounding; 2. Runnnig the USC grounding branch and generating the USC grounding results (as dictionary object); 3. Running our codes and the system will use two types of grounding results as input.
 
 ### C. Parameter Setting  
 Grounding score threshold: 0.85  
