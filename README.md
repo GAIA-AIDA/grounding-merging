@@ -333,7 +333,7 @@ If you use our Docker container images or codes in your research, please cite th
 
 - [Multi-level Multimodal Common Semantic Space for Image-Phrase Grounding](https://arxiv.org/pdf/1811.11683.pdf).
   Hassan Akbari, Svebor Karaman, Surabhi Bhargava, Brian Chen, Carl Vondrick, and Shih-Fu Chang  
-  In IEEE International Conference on Computer Vision and Pattern Recognition (CVPR2019)
+  Proc. International Conference on Computer Vision and Pattern Recognition (CVPR2019)
 
 ### Updates
 
