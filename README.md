@@ -318,8 +318,7 @@ CU grounding_dict file
 ```
 
 ## G. References
-## References
-
+If you use our Docker container images or codes in your research, please cite the following papers.
 - [GAIA: A Fine-grained Multimedia Knowledge Extraction System](http://www.ee.columbia.edu/ln/dvmm/publications/20/aidaacl2020demo.pdf).
   Manling Li, Alireza Zareian, Ying Lin, Xiaoman Pan, Spencer Whitehead, Brian Chen, Bo Wu, Heng Ji, Shih-Fu Chang, Clare Voss, Daniel Napierski and Marjorie Freedman
   Proc. The 58th Annual Meeting of the Association for Computational Linguistics (ACL2020) Demo Track
