@@ -16,7 +16,7 @@ import cv2
 from datetime import datetime
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
+# os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
 gpu_options = tf.GPUOptions(allow_growth=True)
 config = tf.ConfigProto(gpu_options=gpu_options,log_device_placement=True,allow_soft_placement=True)
 
@@ -33,13 +33,14 @@ model_path = '/root/models/'
 
 # Version Setting
 # Set evaluation version as the prefix folder
-version_folder = 'E/'
+version_folder = '' # 'E/' could be ignored if there is no version management
 # Set run version as prefix and uiuc_run_folder
-p_f_run = 'E1' # E5
-uiuc_run_folder = 'RPI_TA1_E1/'
+p_f_run = '' # 'E1' could be ignored if there is no version management
+
+uiuc_run_folder = 'RPI_ttl/'
 
 
-# Input: LDC2019E42 unpacked data, CU visual grounding and instance matching moodels, UIUC text mention results, CU object detection results
+# Input: LDC unpacked data, CU visual grounding and instance matching moodels, UIUC text mention results, CU object detection results
 # Input Paths
 # Source corpus data paths
 print('Check Point: Raw Data corpus_path change',corpus_path)
@@ -61,7 +62,7 @@ print('Check Point: text mentions path change',video_asr_path)
 # CU object detection result paths
 det_results_path_img = working_path + 'cu_objdet_results/' + version_folder + 'det_results_merged_34a.pkl' # jpg images
 det_results_path_kfrm = working_path + 'cu_objdet_results/' + version_folder + 'det_results_merged_34b.pkl' # key frames
-print('Check Point: Alireza path change:','\n',det_results_path_img,'\n', det_results_path_kfrm,'\n')
+print('Check Point: path change:','\n',det_results_path_img,'\n', det_results_path_kfrm,'\n')
 
 
 # Model Paths
@@ -72,12 +73,12 @@ matching_model_path = model_path + 'model_universal_no_recons_ins_only'
 # Output: CU Visual grounding dict files for USC, CU visual grounding results
 # Output Paths
 # CU Visual grounding dict files for USC
-entity2mention_dict_path = working_path + 'cu_grounding_dict_files/' + version_folder + 'entity2mention_dict_'+p_f_run+'.pickle'
-id2mentions_dict_path = working_path + 'cu_grounding_dict_files/' + version_folder + 'id2mentions_dict_'+p_f_run+'.pickle'
+entity2mention_dict_path = working_path + 'cu_grounding_dict_files/' + version_folder + 'entity2mention_dict'+p_f_run+'.pickle'
+id2mentions_dict_path = working_path + 'cu_grounding_dict_files/' + version_folder + 'id2mentions_dict'+p_f_run+'.pickle'
 
 # CU Visual grounding result paths
-grounding_dict_path = working_path + 'cu_grounding_results/' + version_folder + 'grounding_dict_'+p_f_run+'.pickle'
-grounding_log_path = working_path + 'cu_grounding_results/' + version_folder + 'log_grounding_'+p_f_run+'.txt'
+grounding_dict_path = working_path + 'cu_grounding_results/' + version_folder + 'grounding_dict'+p_f_run+'.pickle'
+grounding_log_path = working_path + 'cu_grounding_results/' + version_folder + 'log_grounding'+p_f_run+'.txt'
 
 
 
