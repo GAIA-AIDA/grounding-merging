@@ -47,7 +47,7 @@ uiuc_run_folder = 'RPI_ttl/'
 # Input Paths
 # Source corpus data paths
 print('Check Point: Raw Data corpus_path change',corpus_path)
-parent_child_tab = corpus_path + 'docs/parent_children.sorted.tab'
+parent_child_tab = corpus_path + 'docs/parent_children.tab'
 kfrm_msb = corpus_path + 'docs/masterShotBoundary.msb'
 kfrm_path = corpus_path + 'data/video_shot_boundaries/representative_frames'
 jpg_path = corpus_path + 'data/jpg/jpg/'
