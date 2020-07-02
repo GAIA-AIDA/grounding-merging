@@ -20,26 +20,30 @@ Local development environment:
   - Anaconda 3-4.4  
   - Tensorflow 1.12.0  
 
-Running Docker (mapping the downloaded paths to the /root/models/, /root/shared/, and /root/LDC/)
+Running Docker
 ```
+$ INPUT=/path_to_ldc_corpus/
+$ OUTPUT=/path_to_output_directory/
+$ SHARED=/columbia_data_root/columbia_vision_shared/
+$ GPU_ID=[a single integer index to the GPU]
+
 $ docker pull gaiaaida/grounding-merging
 $ docker images
-$ docker run -it --gpus 1 --name aida-grounding-merging -v /columbia_data_root/columbia_vision_shared/:/root/shared -v /columbia_data_root/columbia_visual_grounding_models/:/root/models -v /LDC2019E42_AIDA_Phase_1_Evaluation_Source_Data_V1.0/:/root/LDC/ gaiaaida/grounding-merging /bin/bash
+$ # The model folder columbia_visual_grounding_models/ can be found in the docker image directly or the soucecode repository
+$ # Mapping the path environment variables ${INPUT}, ${OUTPUT} and ${SHARED} to the /root/models/, /root/shared/, and /root/LDC/
+$ docker run -it --gpus ${GPU_ID} --name aida-grounding-merging -v columbia_visual_grounding_models/:/root/models -v ${INPUT}:/root/LDC/:ro -v ${SHARED}:/root/shared gaiaaida/grounding-merging /bin/bash
 ```
 
 Building Docker
 
 ```
 $ docker build . --tag columbia-gm
-$ $ docker run -it --gpus 1 --name grounding-merging -v /columbia_vision_shared/:/root/shared -v /columbia_visual_grounding_models/:/root/models -v /LDC2019E42_AIDA_Phase_1_Evaluation_Source_Data_V1.0/:/root/LDC2019E42/ columbia-gm /bin/bash
+$ $ docker run -it --gpus ${GPU_ID} --name grounding-merging -v columbia_visual_grounding_models/:/root/models -v ${INPUT}:/root/LDC/:ro -v ${SHARED}:/root/shared columbia-gm /bin/bash
 $ docker exec -it aida-gm /bin/bash
-# python smoke_test.py
-# python Feature_Extraction.py
-# python Visual_Grounding_mp.py
-# python Graph_Merging.py
+$ # python smoke_test.py
 
 $ docker build . --tag columbia-gm
-$ docker run -itd --name aida-gm -p [HOST_PORT]:8082 -v /data/src/bobby/data/data_bobby:/root/data:ro -v /nfs/isicvlnas01/projects/AIDA/2019-05-dryrun/dryrun:/root/dryrun columbia-gm /bin/bash
+$ docker run -itd --name aida-gm -p [HOST_PORT]:8082 -v columbia_visual_grounding_models/:/root/models -v ${INPUT}:/root/LDC/:ro -v ${SHARED}:/root/shared columbia-gm /bin/bash
 $ docker port aida-gm
 $ docker exec -it aida-gm /bin/bash
 # jupyter notebook --allow-root --ip=0.0.0.0 --port=8082 & 
@@ -48,12 +52,12 @@ $ docker exec -it aida-gm /bin/bash
 $ docker exec -it aida-gm /bin/bash
 $$ python ./Feature_Extraction.py
 $$ echo expect to see get [CU Visual_Features] files:
-columbia_vision_shared/cu_grounding_matching_features/semantic_features_jpg.lmdb, semantic_features_keyframe.lmdb, instance_features_jpg.lmdb, instance_features_keyframe.lmdb
-$$ echo expect to see get [CU Grounding] file: columbia_vision_shared/cu_grounding_results/E/grounding_dict_E1.pickle
+${SHARED}/cu_grounding_matching_features/semantic_features_jpg.lmdb, semantic_features_keyframe.lmdb, instance_features_jpg.lmdb, instance_features_keyframe.lmdb
+$$ echo expect to see get [CU Grounding] file: ${SHARED}/cu_grounding_results/grounding_dict.pickle
 $$ python ./Visual_Grounding_mp.py
-$$ echo expect to see get [CU Dictionary] files for USC: 'columbia_vision_shared/cu_grounding_dict_files/E/entity2mention_dict_E1.pickle', 'columbia_vision_shared/cu_grounding_dict_files/E/id2mentions_dict_E1.pickle'
+$$ echo expect to see get [CU Dictionary] files for USC: '${SHARED}/cu_grounding_dict_files/entity2mention_dict.pickle', '${SHARED}/cu_grounding_dict_files/id2mentions_dict.pickle'
 $$ python ./Graph Merging.py
-$$ echo expect to see get [CU Merging] files: 'columbia_vision_shared/cu_graph_merging_ttl/merged_ttl_E1/ 
+$$ echo expect to see get [CU Merging] files: '${OUTPUT}/WORKING/columbia_data_root/cu_graph_merging_ttl/merged_ttl/ 
 
 ```
 
@@ -73,10 +77,10 @@ Sentence score threshold: 0.6
 Version:  
 ```
 # Set evaluation version as the prefix folder
-version_folder = 'E/'
+# version_folder = 'E/'
 # Set run version as prefix and uiuc_run_folder
-p_f_run = 'E1' # E5
-uiuc_run_folder = 'RPI_TA1_E1/'
+# p_f_run = 'E1' # E5
+# uiuc_run_folder = 'RPI_TA1_E1/'
 # Set the number of multiple processes
 processes_num = 32
 ```
@@ -117,7 +121,7 @@ columbia_data_root
 
 - Specify data paths
 ```
-#AVAILABLE_GPU=0
+#AVAILABLE_GPU=${GPU_ID}
 corpus_path = '/root/LDC/' # set /root/LDC/ as the corpus data path
 working_path = '/root/shared/' # set /root/shared/ as the shared folder path
 model_path = '/root/models/' # set /root/models/ as the model folder path
@@ -352,4 +356,13 @@ shared
 local
   from: all_features/
   to: cu_grounding_matching_features/
+```
+#### 2020.03.26 Update Paths
+Delete the below variables:
+```
+# Set evaluation version as the prefix folder
+# version_folder = 'E/'
+# Set run version as prefix and uiuc_run_folder
+# p_f_run = 'E1' # E5
+# uiuc_run_folder = 'RPI_TA1_E1/'
 ```
