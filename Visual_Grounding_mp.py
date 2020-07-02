@@ -29,13 +29,16 @@ config = tf.ConfigProto(gpu_options=gpu_options,log_device_placement=True,allow_
 corpus_path = '/root/LDC/'
 working_path = '/root/shared/'
 model_path = '/root/models/'
+TEST_MODE = True
+if TEST_MODE:
+    print("TEST_MODE is open")
 
 
 # Version Setting
 # Set evaluation version as the prefix folder
 version_folder = '' # 'E/' could be ignored if there is no version management
 # Set run version as prefix and uiuc_run_folder
-p_f_run = '' # 'E1' could be ignored if there is no version management
+p_f_run = '' # '_E1' could be ignored if there is no version management
 
 uiuc_run_folder = 'RPI_ttl/'
 
@@ -186,9 +189,9 @@ turtle_files = os.listdir(txt_mention_ttl_path)
 import ltf_util as uiuc_ltf_util
 ltf_util = uiuc_ltf_util.LTF_util(ltf_path)
 for i,file in enumerate(turtle_files):
-    # [break] only for dockerization testing
-    if i>15:
-        break
+    if i>15 and TEST_MODE:
+        # [break] only for dockerization testing
+        break  
     if ".ttl" not in file:
         continue
 #     print(i,file) # HC000VULD.ttl
@@ -275,15 +278,15 @@ print(datetime.now())
 # Todo: adjust parameters
 en_score_thr = .5 #.9
 sen_score_thr = .6 #.6
-suffix_tmp = '_' + p_f_run + '_5-6'
+suffix_tmp = p_f_run + '_5-6'
 
 en_to_img_dict = {}
 img_to_feat_dict = {}
 img_cnt_dict = {}
 for k,key in enumerate(id2men):
-    # [break] only for dockerization testing
-    if k > 200:
-        break
+    if TEST_MODE and k > 200:
+        # [break] only for dockerization testing
+        break  
     
     sys.stdout.write('Key {}/{} \r'.format(k,len(id2men)))                
     sys.stdout.flush()
@@ -424,8 +427,9 @@ for i,en in enumerate(en_to_img_dict):
                 en_to_img_dict[en]['grounding'][img_id]['instance_features'].append(img_vec_pred[j,:])
         sys.stderr.write("Stored for image {} / {} \r".format(i, len(en_to_img_dict)))
         sys.stdout.flush() 
-        # [break] only for dockerization testing
-        break
+        if TEST_MODE:
+            # [break] only for dockerization testing
+            break  
     except ValueError:
         print("Oops!",i,ValueError) 
 sess_ins.close()
