@@ -28,18 +28,22 @@ from aida_interchange.bounding_box import Bounding_Box
 corpus_path = '/root/LDC/'
 working_path = '/root/shared/'
 output_path = '/root/output/'
+TEST_MODE = True
+if TEST_MODE:
+    print("TEST_MODE is open")
 
 
 # Version Setting
 # Set evaluation version as the prefix folder
 version_folder = '' # 'E/' could be ignored if there is no version management
 # Set run version as prefix
-# p_f_run = '' # '_E1' could be ignored if there is no version management
+p_f_run = '' # '_E1' could be ignored if there is no version management
+uiuc_run_folder = 'RPI_ttl/'
 
 # Set the number of multiple processes
-processes_num = 16
+processes_num = 32
 
-# Input: LDC2019E42 unpacked data, CU visual grounding and all detection results, UIUC text mention results, USC grounding results
+# Input: LDC unpacked data, CU visual grounding and all detection results, UIUC text mention results, USC grounding results
 # Input Paths
 # Source corpus data paths
 print('Check Point: LDC raw data change',corpus_path)
@@ -504,11 +508,12 @@ pool = mp.Pool(processes=processes_num)
     #for x,y in candidateDic.items():
     #print candidateDic.keys()
   
-# [break] only for dockerization testing
-keys_list = [k for k in parent_dict.keys()]
-res = pool.map(transferAIF, keys_list[:5])
-
-# res = pool.map(transferAIF, parent_dict.keys())
+if TEST_MODE:
+    # [break] only for dockerization testing
+    keys_list = [k for k in parent_dict.keys()]
+    res = pool.map(transferAIF, keys_list[:5])
+else:
+    res = pool.map(transferAIF, parent_dict.keys())
 print(datetime.now())
 
 print('Graph Merging Finished.')
