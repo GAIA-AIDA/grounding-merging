@@ -27,7 +27,7 @@ $ # please run the necessary modules (CU_Object_Detection, CU_Face/Flag/Landmark
 $ SHARED=/columbia_data_root/columbia_vision_shared/
 $ OUTPUT=/path_to_output_directory/
 $ # please create the folder /columbia_data_root/ under the ${OUTPUT}/WORKING/ directory for output files
-$ mkdir  ${OUTPUT}//WORKING/columbia_data_root/
+$ mkdir  ${OUTPUT}/WORKING/columbia_data_root/
 $ GPU_ID=[a single integer index to the GPU]
 
 $ docker pull gaiaaida/grounding-merging
