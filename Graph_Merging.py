@@ -27,7 +27,6 @@ from aida_interchange.bounding_box import Bounding_Box
 # Specify data paths
 corpus_path = '/root/LDC/'
 working_path = '/root/shared/'
-output_path = '/root/output/'
 TEST_MODE = True
 if TEST_MODE:
     print("TEST_MODE is open")
@@ -89,7 +88,7 @@ usc_dict_path = working_path + 'usc_grounding_dict/' + version_folder + 'uscvisi
 # Output: CU graph merging result
 # Output Paths
 # CU graph merging result path
-merged_graph_path = output_path + 'cu_graph_merging_ttl/' + version_folder + 'merged_ttl'+ p_f_run + '/'
+merged_graph_path = working_path + 'cu_graph_merging_ttl/' + version_folder + 'merged_ttl'+ p_f_run + '/'
 
 
 # Merge USC grounding results
