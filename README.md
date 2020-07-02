@@ -22,31 +22,30 @@ Local development environment:
 
 Running Docker
 ```
-$ INPUT=/path_to_ldc_corpus/
-$ # please run the necessary modules (CU_Object_Detection, CU_Face/Flag/Landmark_Recognition and UIUC_Text_Pipeline) to get or download the the required result files to the shared directory ...
-$ SHARED=/columbia_data_root/columbia_vision_shared/
-$ OUTPUT=/path_to_output_directory/
-$ # please create the folder /columbia_data_root/ under the ${OUTPUT}/WORKING/ directory for output files
-$ mkdir  ${OUTPUT}/WORKING/columbia_data_root/
+$ INPUT= /host_input/
+$ OUTPUT=/host_output/
+$ # please create the folder /columbia_vision_shared/ under the ${OUTPUT}/WORKING/ directory for output files
+$ mkdir  ${OUTPUT}/WORKING/columbia_vision_shared/
+$ # please run the necessary modules (CU_Object_Detection, CU_Face/Flag/Landmark_Recognition and UIUC_Text_Pipeline) to get or download the the required result files to the shared directory: ${OUTPUT}/WORKING/columbia_vision_shared/
 $ GPU_ID=[a single integer index to the GPU]
 
 $ docker pull gaiaaida/grounding-merging
 $ docker images
 $ # The model folder columbia_visual_grounding_models/ can be found in the docker image directly or the soucecode repository
-$ # Mapping the path environment variables ${INPUT}, ${SHARED} and ${OUTPUT} to the /root/LDC/, /root/shared/, and /root/output/
-$ docker run -it -e CUDA_VISIBLE_DEVICES=${GPU_ID} --gpus ${GPU_ID} --name aida-grounding-merging -v columbia_visual_grounding_models/:/root/models -v ${INPUT}:/root/LDC/:ro -v ${SHARED}:/root/shared ${OUTPUT}/WORKING/columbia_data_root/:/root/output/ gaiaaida/grounding-merging /bin/bash
+$ # Mapping the directories environment variables ${INPUT} and ${OUTPUT}/WORKING/columbia_vision_shared/ to the paths in codes /root/LDC and /root/shared
+$ docker run -it -e CUDA_VISIBLE_DEVICES=${GPU_ID} --gpus ${GPU_ID} --name aida-grounding-merging -v columbia_visual_grounding_models/:/root/models -v ${INPUT}:/root/LDC:ro -v ${OUTPUT}/WORKING/columbia_vision_shared/:/root/shared gaiaaida/grounding-merging /bin/bash
 ```
 
 Building Docker
 
 ```
 $ docker build . --tag columbia-gm
-$ $ docker run -it -e CUDA_VISIBLE_DEVICES=${GPU_ID} --gpus ${GPU_ID} --name grounding-merging -v columbia_visual_grounding_models/:/root/models -v ${INPUT}:/root/LDC/:ro -v ${SHARED}:/root/shared columbia-gm /bin/bash
+$ $ docker run -it -e CUDA_VISIBLE_DEVICES=${GPU_ID} --gpus ${GPU_ID} --name grounding-merging -v columbia_visual_grounding_models/:/root/models -v ${INPUT}:/root/LDC:ro -v ${OUTPUT}/WORKING/columbia_vision_shared/:/root/shared columbia-gm /bin/bash
 $ docker exec -it aida-gm /bin/bash
 $ # python smoke_test.py
 
 $ docker build . --tag columbia-gm
-$ docker run -itd --name aida-gm -p [HOST_PORT]:8082 -v columbia_visual_grounding_models/:/root/models -v ${INPUT}:/root/LDC/:ro -v ${SHARED}:/root/shared columbia-gm /bin/bash
+$ docker run -itd --name aida-gm -p [HOST_PORT]:8082 -v columbia_visual_grounding_models/:/root/models -v ${INPUT}:/root/LDC:ro -v ${OUTPUT}/WORKING/columbia_vision_shared/:/root/shared columbia-gm /bin/bash
 $ docker port aida-gm
 $ docker exec -it aida-gm /bin/bash
 # jupyter notebook --allow-root --ip=0.0.0.0 --port=8082 & 
@@ -55,13 +54,12 @@ $ docker exec -it aida-gm /bin/bash
 $ docker exec -it aida-gm /bin/bash
 $$ python ./Feature_Extraction.py
 $$ echo expect to see get [CU Visual_Features] files:
-${SHARED}/cu_grounding_matching_features/semantic_features_jpg.lmdb, semantic_features_keyframe.lmdb, instance_features_jpg.lmdb, instance_features_keyframe.lmdb
-$$ echo expect to see get [CU Grounding] file: ${SHARED}/cu_grounding_results/grounding_dict.pickle
+${OUTPUT}/WORKING/columbia_vision_shared/cu_grounding_matching_features/semantic_features_jpg.lmdb, semantic_features_keyframe.lmdb, instance_features_jpg.lmdb, instance_features_keyframe.lmdb
+$$ echo expect to see get [CU Grounding] file: ${OUTPUT}/WORKING/columbia_vision_shared/cu_grounding_results/grounding_dict.pickle
 $$ python ./Visual_Grounding_mp.py
-$$ echo expect to see get [CU Dictionary] files for USC: '${SHARED}/cu_grounding_dict_files/entity2mention_dict.pickle', '${SHARED}/cu_grounding_dict_files/id2mentions_dict.pickle'
+$$ echo expect to see get [CU Dictionary] files for USC: ${OUTPUT}/WORKING/columbia_vision_shared/cu_grounding_dict_files/entity2mention_dict.pickle, ${OUTPUT}/WORKING/columbia_vision_shared/cu_grounding_dict_files/id2mentions_dict.pickle
 $$ python ./Graph Merging.py
-$$ echo expect to see get [CU Merging] files: '${OUTPUT}/WORKING/columbia_data_root/cu_graph_merging_ttl/merged_ttl/ 
-
+$$ echo expect to see get [CU Merging] files: ${OUTPUT}/WORKING/columbia_vision_shared/cu_graph_merging_ttl/merged_ttl/ 
 ```
 
 #### The 3 main steps should be run one by one: 
@@ -98,7 +96,7 @@ File List:
 ```  
 - Data Structure
 ```
-columbia_data_root
+columbia_data_root (equivalent to ${OUTPUT}/WORKING/)
 ├── columbia_vision_shared
 │   ├── cu_objdet_results
 │   ├── cu_grounding_matching_features
@@ -269,7 +267,7 @@ File List:
 #### Output: 
 [CU Merging]  files   
 ```
-    merged_graph_path = output_path + 'cu_graph_merging_ttl/' + 'merged_ttl/'
+    merged_graph_path = working_path + 'cu_graph_merging_ttl/' + 'merged_ttl/'
 ```
 
 ## F. Main Steps of Running  
