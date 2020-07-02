@@ -47,7 +47,7 @@ processes_num = 32
 # Input Paths
 # Source corpus data paths
 print('Check Point: LDC raw data change',corpus_path)
-parent_child_tab = corpus_path + 'docs/parent_children.sorted.tab'
+parent_child_tab = corpus_path + 'docs/parent_children.tab'
 parent_dict, child_dict = utils.create_dict(parent_child_tab)
 
 
