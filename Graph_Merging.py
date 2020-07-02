@@ -27,17 +27,17 @@ from aida_interchange.bounding_box import Bounding_Box
 # Specify data paths
 corpus_path = '/root/LDC/'
 working_path = '/root/shared/'
+output_path = '/root/output/'
 
 
 # Version Setting
 # Set evaluation version as the prefix folder
-version_folder = 'E/'
-# Set run version as prefix and uiuc_run_folder
-p_f_run = 'E1' # E5
-uiuc_run_folder = 'RPI_TA1_E1/'
+version_folder = '' # 'E/' could be ignored if there is no version management
+# Set run version as prefix
+# p_f_run = '' # '_E1' could be ignored if there is no version management
 
 # Set the number of multiple processes
-processes_num = 32
+processes_num = 16
 
 # Input: LDC2019E42 unpacked data, CU visual grounding and all detection results, UIUC text mention results, USC grounding results
 # Input Paths
@@ -56,7 +56,7 @@ ins_img_path = working_path + 'cu_grounding_matching_features/' + 'instance_feat
 ins_kfrm_path = working_path + 'cu_grounding_matching_features/' + 'instance_features_keyframe.lmdb'
 
 # CU visual grounding result path
-grounding_dict_path = working_path + 'cu_grounding_results/' + version_folder + 'grounding_dict_'+p_f_run+'.pickle'
+grounding_dict_path = working_path + 'cu_grounding_results/' + version_folder + 'grounding_dict'+p_f_run+'.pickle'
 print('Check Point: version change',grounding_dict_path)
 grounding_dict = pickle.load(open(grounding_dict_path,'rb'))
 # def top_dict(kv_dict, num = 2):
@@ -68,25 +68,24 @@ grounding_dict = pickle.load(open(grounding_dict_path,'rb'))
 
 # CU temporal ttl results
 cu_ttl_tmp_path = working_path + 'cu_ttl_tmp/'
-cu_ttl_path = cu_ttl_tmp_path + version_folder + 'm18_' + p_f_run + '/'
-cu_ttl_ins_path = cu_ttl_tmp_path + version_folder + 'm18_i_c_' + p_f_run + '/'
+cu_ttl_path = cu_ttl_tmp_path + version_folder + 'm18' + p_f_run + '/'
+cu_ttl_ins_path = cu_ttl_tmp_path + version_folder + 'm18_i_c' + p_f_run + '/'
 print('Check Point: cu_ttl_tmp_path change',cu_ttl_path,cu_ttl_ins_path)
 
 
 #UIUC text mention result paths
-txt_mention_ttl_path = working_path + 'uiuc_ttl_results/' + version_folder + uiuc_run_folder # 1/7th May
-#'RPI_TA1_20190504' 'uiuc_ttl_results/RPI_dryrun_'+p_f_run
+txt_mention_ttl_path = working_path + 'uiuc_ttl_results/' + version_folder + uiuc_run_folder 
 print('Check Point: text mention ttl path change',txt_mention_ttl_path)
 
 
 # USC visual grounding result path for merging
-usc_dict_path = working_path + 'usc_grounding_dict/' + version_folder + 'uscvision_grounding_output_cu_format_' + p_f_run + '.pickle' 
+usc_dict_path = working_path + 'usc_grounding_dict/' + version_folder + 'uscvision_grounding_output_cu_format' + p_f_run + '.pickle' 
 
 
 # Output: CU graph merging result
 # Output Paths
 # CU graph merging result path
-merged_graph_path = working_path + 'cu_graph_merging_ttl/' + version_folder + 'merged_ttl_'+ p_f_run + '/'
+merged_graph_path = output_path + 'cu_graph_merging_ttl/' + version_folder + 'merged_ttl'+ p_f_run + '/'
 
 
 # Merge USC grounding results
