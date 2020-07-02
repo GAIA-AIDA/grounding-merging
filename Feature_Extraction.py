@@ -31,6 +31,8 @@ corpus_path = '/root/LDC/'
 working_path = '/root/shared/'
 model_path = '/root/models/'
 TEST_MODE = True
+if TEST_MODE:
+    print("TEST_MODE is open")
 
 # Version Setting
 # Set evaluation version as the prefix folder
