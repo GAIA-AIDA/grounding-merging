@@ -16,7 +16,7 @@ import random
 from utils import *
 from datetime import datetime
 os.environ['CUDA_DEVICE_ORDER']='PCI_BUS_ID'
-os.environ['CUDA_VISIBLE_DEVICES']='0,1,2,3'
+# os.environ['CUDA_VISIBLE_DEVICES']='0,1,2,3'
 # GPU_ID
 gpu_options = tf.GPUOptions(allow_growth=True)
 config = tf.ConfigProto(gpu_options=gpu_options,log_device_placement=True,allow_soft_placement=True)
@@ -30,14 +30,14 @@ config = tf.ConfigProto(gpu_options=gpu_options,log_device_placement=True,allow_
 corpus_path = '/root/LDC/'
 working_path = '/root/shared/'
 model_path = '/root/models/'
-
+TEST_MODE = True
 
 # Version Setting
 # Set evaluation version as the prefix folder
-version_folder = 'E/'
+version_folder = '' # 'E/' could be ignored if there is no version management
 
 
-# Input: LDC2019E42 unpacked data, CU visual grounding and instance matching moodels, UIUC text mention results, CU object detection results
+# Input: LDC unpacked data, CU visual grounding and instance matching moodels, UIUC text mention results, CU object detection results
 # Input Paths
 # Source corpus data paths
 print('Check Point: Raw Data corpus_path change',corpus_path)
@@ -56,7 +56,7 @@ print('Check Point: text mentions path change',video_asr_path)
 # CU object detection result paths
 det_results_path_img = working_path + 'cu_objdet_results/' + version_folder + 'det_results_merged_34a.pkl' # jpg images
 det_results_path_kfrm = working_path + 'cu_objdet_results/' + version_folder + 'det_results_merged_34b.pkl' # key frames
-print('Check Point: Alireza path change:','\n',det_results_path_img,'\n', det_results_path_kfrm,'\n')
+print('Check Point: path change:','\n',det_results_path_img,'\n', det_results_path_kfrm,'\n')
 
 
 # Model Paths
@@ -134,9 +134,9 @@ for i, key in enumerate(dict_obj_img):
             save_key = key+'/'+str(bb_id)
             with lmdb_env_jpg.begin(write=True) as lmdb_txn:
                 lmdb_txn.put(save_key.encode(), img_vec)
-    # [break] only for dockerization testing
-    break   
-    
+    if TEST_MODE:
+        # [break] only for dockerization testing
+        break  
     sys.stderr.write("Stored for image {} / {} \r".format(i, len(dict_obj_img)))
 print(datetime.now())
  
@@ -163,8 +163,9 @@ for i, key in enumerate(dict_obj_kfrm):
             save_key = key+'/'+str(bb_id)
             with lmdb_env_kfrm.begin(write=True) as lmdb_txn:
                 lmdb_txn.put(save_key.encode(), img_vec)
-    # [break] only for dockerization testing
-    break  
+    if TEST_MODE:
+        # [break] only for dockerization testing
+        break   
     sys.stderr.write("Stored for keyframe {} / {} \r".format(i, len(dict_obj_kfrm)))
 print(datetime.now())
 len(missed_children_jpg)
@@ -188,8 +189,8 @@ print(datetime.now())
 missed_children_jpg = []
 for i, key in enumerate(dict_obj_img):
     # Todo test
-    if 'HC0005KMS' not in key: #or 'HC0001H01' in key:
-        continue
+#     if 'HC0005KMS' not in key: #or 'HC0001H01' in key:
+#         continue
     print(i,key)
 
     imgs,_ = fetch_img(key+'.jpg.ldcc', parent_dict, child_dict, path_dict, level = 'Child')
@@ -213,8 +214,9 @@ for i, key in enumerate(dict_obj_img):
             with lmdb_env_jpg.begin(write=True) as lmdb_txn:
                 lmdb_txn.put(save_key.encode(), img_vec_pred[j,:])
 #                 print(sum(img_vec_pred[j,:]))
-    # [break] only for dockerization testing
-    break  
+    if TEST_MODE:
+        # [break] only for dockerization testing
+        break    
     sys.stderr.write("Stored for image {} / {} \r".format(i, len(dict_obj_img)))
 print(datetime.now())
 
@@ -234,8 +236,9 @@ for i, key in enumerate(dict_obj_kfrm):
             save_key = key+'/'+str(bb_id)
             with lmdb_env_kfrm.begin(write=True) as lmdb_txn:
                 lmdb_txn.put(save_key.encode(), img_vec_pred[j,:])
-    # [break] only for dockerization testing
-    break  
+    if TEST_MODE:
+        # [break] only for dockerization testing
+        break  
     sys.stderr.write("Stored for keyframe {} / {} \r".format(i, len(dict_obj_kfrm)))
 print(datetime.now())
 
