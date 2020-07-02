@@ -23,15 +23,18 @@ Local development environment:
 Running Docker
 ```
 $ INPUT=/path_to_ldc_corpus/
-$ OUTPUT=/path_to_output_directory/
+$ # please run the necessary modules (CU_Object_Detection, CU_Face/Flag/Landmark_Recognition and UIUC_Text_Pipeline) to get or download the the required result files to the shared directory ...
 $ SHARED=/columbia_data_root/columbia_vision_shared/
+$ OUTPUT=/path_to_output_directory/
+$ # please create the folder /columbia_data_root/ under the ${OUTPUT}/WORKING directory for output files
+$ mkdir  ${OUTPUT}//WORKING/columbia_data_root/
 $ GPU_ID=[a single integer index to the GPU]
 
 $ docker pull gaiaaida/grounding-merging
 $ docker images
 $ # The model folder columbia_visual_grounding_models/ can be found in the docker image directly or the soucecode repository
-$ # Mapping the path environment variables ${INPUT}, ${OUTPUT} and ${SHARED} to the /root/models/, /root/shared/, and /root/LDC/
-$ docker run -it --gpus ${GPU_ID} --name aida-grounding-merging -v columbia_visual_grounding_models/:/root/models -v ${INPUT}:/root/LDC/:ro -v ${SHARED}:/root/shared gaiaaida/grounding-merging /bin/bash
+$ # Mapping the path environment variables ${INPUT}, ${SHARED} and ${OUTPUT} to the /root/LDC/, /root/shared/, and /root/output/
+$ docker run -it --gpus ${GPU_ID} --name aida-grounding-merging -v columbia_visual_grounding_models/:/root/models -v ${INPUT}:/root/LDC/:ro -v ${SHARED}:/root/shared ${OUTPUT}/WORKING/columbia_data_root/:/root/output/ gaiaaida/grounding-merging /bin/bash
 ```
 
 Building Docker
@@ -74,18 +77,9 @@ The steps associates with "feature extraction", "visual grounding and instance m
 ### C. Parameter Setting  
 Grounding score threshold: 0.85  
 Sentence score threshold: 0.6  
-Version:  
-```
-# Set evaluation version as the prefix folder
-# version_folder = 'E/'
-# Set run version as prefix and uiuc_run_folder
-# p_f_run = 'E1' # E5
-# uiuc_run_folder = 'RPI_TA1_E1/'
-# Set the number of multiple processes
-processes_num = 32
-```
+Set the number of multiple processes: processes_num = 32
 
-## D. Dataset Download  
+## D. Data Download  
 
 #### 1. Corpus Data Download (one example of the input data) 
 ```
@@ -97,7 +91,7 @@ File List:
 
 
 
-#### 2. Other Data and Models Download  
+#### 2. Download Exemplary Data and Pretrained Model Files for Testing
 ```
     Download Link: https://drive.google.com/drive/folders/1JQak5s31I4nwGNASpOQ_GbQpJuS85lFr?usp=sharing    
     Download the shared folders (/columbia_data_root/columbia_vision_shared/) and the visual grounding model files (/columbia_data_root/columbia_visual_grounding_models/) for visual grounding, instance matching and graph merging.
@@ -184,13 +178,13 @@ File List:
 ```
 [UIUC] 2 files  
 ```
-    video_asr_path = working_path + 'uiuc_asr_files/' + version_folder +'ltf_asr/'
-    video_map_path = working_path + 'uiuc_asr_files/' + version_folder +'map_asr/'
+    video_asr_path = working_path + 'uiuc_asr_files/' +'ltf_asr/'
+    video_map_path = working_path + 'uiuc_asr_files/' +'map_asr/'
 ```
 [CU obj_det] files  
 ``` 
-    det_results_path_img = working_path + 'cu_objdet_results/' + version_folder + 'det_results_merged_34a_jpg.pkl'
-    det_results_path_kfrm = working_path + 'cu_objdet_results/' + version_folder + 'det_results_merged_34b_kf.pkl'
+    det_results_path_img = working_path + 'cu_objdet_results/' + 'det_results_merged_34a.pkl'
+    det_results_path_kfrm = working_path + 'cu_objdet_results/' + 'det_results_merged_34b.pkl'
 ```  
 [CU grounding_model] files
 ```
@@ -221,10 +215,10 @@ File List:
 ```
 [UIUC] 4 files
 ```
-    txt_mention_ttl_path = working_path + 'uiuc_ttl_results/' + version_folder + uiuc_run_folder # 1/7th May
+    txt_mention_ttl_path = working_path + 'uiuc_ttl_results/' 
     pronouns_path = working_path + 'uiuc_asr_files/' + 'pronouns.txt'
-    video_asr_path = working_path + 'uiuc_asr_files/' + version_folder +'ltf_asr/'
-    video_map_path = working_path + 'uiuc_asr_files/' + version_folder +'map_asr/'
+    video_asr_path = working_path + 'uiuc_asr_files/' +'ltf_asr/'
+    video_map_path = working_path + 'uiuc_asr_files/' +'map_asr/'
 ```
 [CU obj_det]   
 ```
@@ -233,14 +227,14 @@ File List:
 #### Intermediate Output:  
 [CU Dictionary] files (for USC)
 ```
-    entity2mention_dict_path = working_path + 'cu_grounding_dict_files/' + version_folder + 'entity2mention_dict_'+p_f_run+'.pickle'
-    id2mentions_dict_path = working_path + 'cu_grounding_dict_files/' + version_folder + 'id2mentions_dict_'+p_f_run+'.pickle' 
+    entity2mention_dict_path = working_path + 'cu_grounding_dict_files/' + 'entity2mention_dict.pickle'
+    id2mentions_dict_path = working_path + 'cu_grounding_dict_files/' + 'id2mentions_dict.pickle' 
 ```  
 #### Output:  
 [CU Grounding] files  
 ```
-    grounding_dict_path = working_path + 'cu_grounding_results/' + version_folder + 'grounding_dict_'+p_f_run+'.pickle'
-    grounding_log_path = working_path + 'cu_grounding_results/' + version_folder + 'log_grounding_'+p_f_run+'.txt'
+    grounding_dict_path = working_path + 'cu_grounding_results/' + 'grounding_dict.pickle'
+    grounding_log_path = working_path + 'cu_grounding_results/' + 'log_grounding.txt'
 ```
 
 
@@ -248,7 +242,7 @@ File List:
 #### Input:    
 [LDC] 3 files  
 ```
-    parent_child_tab = corpus_path + 'docs/parent_children.sorted.tab'
+    parent_child_tab = corpus_path + 'docs/parent_children.sorted.tab' # sorted
 ```
 [CU Visual_Features] files  
 ```
@@ -256,26 +250,26 @@ File List:
 ```
 [CU Grounding] file  
 ```
-    Generated by the module of Visual Grounding: grounding_dict_path = working_path + 'cu_grounding_results/' + version_folder + 'grounding_dict_'+p_f_run+'.pickle'
+    Generated by the module of Visual Grounding: grounding_dict_path = working_path + 'cu_grounding_results/' + version_folder + 'grounding_dict.pickle'
 ```
 [USC] file  
 ```
-    usc_dict_path = working_path + 'usc_grounding_dict/' + version_folder + 'uscvision_grounding_output_cu_format_' + p_f_run + '.pickle' 
+    usc_dict_path = working_path + 'usc_grounding_dict/' + version_folder + 'uscvision_grounding_output_cu_format.pickle' 
 ```  
 [UIUC] file  
 ```
-    txt_mention_ttl_path = working_path + 'uiuc_ttl_results/' + version_folder + uiuc_run_folder # 1/7th May
+    txt_mention_ttl_path = working_path + 'uiuc_ttl_results/' + uiuc_run_folder # 1/7th May
 ```  
 [CU clustering] 2 files  
 ```
     cu_ttl_tmp_path = working_path + 'cu_ttl_tmp/'
-    cu_ttl_path = cu_ttl_tmp_path + version_folder + 'm18_' + p_f_run + '/'
-    cu_ttl_ins_path = cu_ttl_tmp_path + version_folder + 'm18_i_c_' + p_f_run + '/'
+    cu_ttl_path = cu_ttl_tmp_path + version_folder + 'm18/'
+    cu_ttl_ins_path = cu_ttl_tmp_path + version_folder + 'm18_i_c/'
 ```  
 #### Output: 
 [CU Merging]  files   
 ```
-    merged_graph_path = working_path + 'cu_graph_merging_ttl/' + version_folder + 'merged_ttl_'+ p_f_run + '/'
+    merged_graph_path = output_path + 'cu_graph_merging_ttl/' + 'merged_ttl/'
 ```
 
 ## F. Main Steps of Running  
@@ -357,12 +351,4 @@ local
   from: all_features/
   to: cu_grounding_matching_features/
 ```
-#### 2020.03.26 Update Paths
-Delete the below variables:
-```
-# Set evaluation version as the prefix folder
-# version_folder = 'E/'
-# Set run version as prefix and uiuc_run_folder
-# p_f_run = 'E1' # E5
-# uiuc_run_folder = 'RPI_TA1_E1/'
-```
+
