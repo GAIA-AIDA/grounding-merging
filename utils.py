@@ -12,7 +12,8 @@ from rdflib.namespace import SKOS
 from sklearn.cluster import DBSCAN
 
 # nist_ont_pref = '.../SM-KBP/2018/ontologies/InterchangeOntology#'
-nist_ont_pref = 'https://tac.nist.gov/tracks/SM-KBP/2019/ontologies/InterchangeOntology#'
+#nist_ont_pref = 'https://tac.nist.gov/tracks/SM-KBP/2019/ontologies/InterchangeOntology#'
+nist_ont_pref = 'https://raw.githubusercontent.com/NextCenturyCorporation/AIDA-Interchange-Format/master/java/src/main/resources/com/ncc/aif/ontologies/InterchangeOntology#'
 justified_by_ = URIRef(nist_ont_pref+'justifiedBy')
 entity_ = URIRef(nist_ont_pref+'Entity')
 sys_ = URIRef(nist_ont_pref+'system')
@@ -64,8 +65,8 @@ def create_dict(tab_path):
     parent_dict = {}
     child_dict = {}
     for line in lines[1:]:
-        parent_id = line[7]
-        child_id = line[2]+line[1]
+        parent_id = line[2] #[7]
+        child_id = line[3] + line[5] #[2]+line[1]
 
         ##updating parent_dict
         if parent_id in parent_dict:

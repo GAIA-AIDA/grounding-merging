@@ -27,17 +27,17 @@ from aida_interchange.bounding_box import Bounding_Box
 # Specify data paths
 corpus_path = '/root/LDC/'
 working_path = '/root/shared/'
-TEST_MODE = True
+TEST_MODE = False #True
 if TEST_MODE:
     print("TEST_MODE is open")
 
 
 # Version Setting
 # Set evaluation version as the prefix folder
-version_folder = '' # 'E/' could be ignored if there is no version management
+version_folder = 'dryrun/' # 'E/' could be ignored if there is no version management
 # Set run version as prefix
-p_f_run = '' # '_E1' could be ignored if there is no version management
-uiuc_run_folder = 'RPI_ttl/'
+p_f_run = 'dryrun' # '_E1' could be ignored if there is no version management
+uiuc_run_folder = 'ttl/'
 
 # Set the number of multiple processes
 processes_num = 32
@@ -71,8 +71,8 @@ grounding_dict = pickle.load(open(grounding_dict_path,'rb'))
 
 # CU temporal ttl results
 cu_ttl_tmp_path = working_path + 'cu_ttl_tmp/'
-cu_ttl_path = cu_ttl_tmp_path + version_folder + 'm18' + p_f_run + '/'
-cu_ttl_ins_path = cu_ttl_tmp_path + version_folder + 'm18_i_c' + p_f_run + '/'
+cu_ttl_path = cu_ttl_tmp_path + version_folder + 'm36_' + p_f_run + '/'
+cu_ttl_ins_path = cu_ttl_tmp_path + version_folder + 'm36_i_c_' + p_f_run + '/'
 print('Check Point: cu_ttl_tmp_path change',cu_ttl_path,cu_ttl_ins_path)
 
 
