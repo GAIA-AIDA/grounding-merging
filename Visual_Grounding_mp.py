@@ -36,11 +36,12 @@ if TEST_MODE:
 
 # Version Setting
 # Set evaluation version as the prefix folder
-version_folder = 'dryrun/' # 'E/' could be ignored if there is no version management
+version_folder = 'dryrun03/' # 'E/' could be ignored if there is no version management
+uiuc_version_folder = 'dryrun/' 
 # Set run version as prefix and uiuc_run_folder
-p_f_run = 'dryrun' # '_E1' could be ignored if there is no version management
+p_f_run = '_dryrun_updated03' # '_E1' could be ignored if there is no version management
 
-uiuc_run_folder = 'ttl/'
+uiuc_run_folder = 'ttl_updated/'
 
 
 # Input: LDC unpacked data, CU visual grounding and instance matching moodels, UIUC text mention results, CU object detection results
@@ -55,10 +56,10 @@ ltf_path = corpus_path + 'data/ltf/ltf/'
 
 
 #UIUC text mention result paths
-txt_mention_ttl_path = working_path + 'uiuc_ttl_results/' + version_folder + uiuc_run_folder # 1/7th May
+txt_mention_ttl_path = working_path + 'uiuc_ttl_results/' + uiuc_version_folder + uiuc_run_folder # 1/7th May
 pronouns_path = working_path + 'uiuc_asr_files/' + 'pronouns.txt'
-video_asr_path = working_path + 'uiuc_asr_files/' + version_folder +'ltf_asr/'
-video_map_path = working_path + 'uiuc_asr_files/' + version_folder +'map_asr/'
+video_asr_path = working_path + 'uiuc_asr_files/' + uiuc_version_folder +'ltf_asr/'
+video_map_path = working_path + 'uiuc_asr_files/' + uiuc_version_folder +'map_asr/'
 print('Check Point: text mentions path change',video_asr_path)
 
 
