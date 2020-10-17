@@ -1,4 +1,5 @@
-FROM python:3.6.3
+#FROM python:3.6.3
+FROM nvidia/cuda:10.0-devel-ubuntu16.04
 
 LABEL maintainer Dan Napierski (ISI) <dan.napierski@toptal.com>
 

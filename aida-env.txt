@@ -4,3 +4,4 @@ python-lmdb=0.97
 rdflib=4.2.2
 scikit-image
 scikit-learn
+tqdm

@@ -16,7 +16,7 @@ import random
 from utils import *
 from datetime import datetime
 os.environ['CUDA_DEVICE_ORDER']='PCI_BUS_ID'
-# os.environ['CUDA_VISIBLE_DEVICES']='0,1,2,3'
+os.environ['CUDA_VISIBLE_DEVICES']='0,1,2,3'
 # GPU_ID
 gpu_options = tf.GPUOptions(allow_growth=True)
 config = tf.ConfigProto(gpu_options=gpu_options,log_device_placement=True,allow_soft_placement=True)
@@ -26,20 +26,20 @@ config = tf.ConfigProto(gpu_options=gpu_options,log_device_placement=True,allow_
 # Columbia University
 #############
 
-# Specify data paths
+# Specify data path
+shared = ''
+models = ''
 corpus_path = '/root/LDC/'
-working_path = '/root/shared/'
-model_path = '/root/models/'
-TEST_MODE = True
-if TEST_MODE:
-    print("TEST_MODE is open")
+working_path = shared + '/root/shared/'
+model_path = models + '/root/models/'
+
 
 # Version Setting
 # Set evaluation version as the prefix folder
-version_folder = '' # 'E/' could be ignored if there is no version management
+version_folder = 'dryrun03/' #'dryrun/'
 
 
-# Input: LDC unpacked data, CU visual grounding and instance matching moodels, UIUC text mention results, CU object detection results
+# Input: LDC2019E42 unpacked data, CU visual grounding and instance matching moodels, UIUC text mention results, CU object detection results
 # Input Paths
 # Source corpus data paths
 print('Check Point: Raw Data corpus_path change',corpus_path)
@@ -50,16 +50,15 @@ jpg_path = corpus_path + 'data/jpg/jpg/'
 
 
 #UIUC text mention result paths
-video_asr_path = working_path + 'uiuc_asr_files/' + version_folder +'ltf_asr/'
-video_map_path = working_path + 'uiuc_asr_files/' + version_folder +'map_asr/'
+video_asr_path = working_path + 'uiuc_asr_files/' + version_folder +'en_asr_ltf/'
+video_map_path = working_path + 'uiuc_asr_files/' + version_folder +'en_asr_map/'
 print('Check Point: text mentions path change',video_asr_path)
 
 
 # CU object detection result paths
 det_results_path_img = working_path + 'cu_objdet_results/' + version_folder + 'det_results_merged_34a.pkl' # jpg images
 det_results_path_kfrm = working_path + 'cu_objdet_results/' + version_folder + 'det_results_merged_34b.pkl' # key frames
-print('Check Point: path change:','\n',det_results_path_img,'\n', det_results_path_kfrm,'\n')
-
+print('Check Point: Alireza path change:','\n',det_results_path_img,'\n', det_results_path_kfrm,'\n')
 
 # Model Paths
 # CU visual grounding and instance matching moodel paths
@@ -70,12 +69,13 @@ matching_model_path = model_path + 'model_universal_no_recons_ins_only'
 # Output: CU visual grounding and instance matching features
 # Output Paths
 # CU visual grounding feature paths
-out_path_jpg = working_path + 'cu_grounding_matching_features/' + 'semantic_features_jpg.lmdb'
-out_path_kfrm = working_path + 'cu_grounding_matching_features/' + 'semantic_features_keyframe.lmdb'
-
+out_path_jpg_sem = working_path + 'cu_grounding_matching_features/' + version_folder + 'semantic_features_jpg.lmdb'
+out_path_kfrm_sem = working_path + 'cu_grounding_matching_features/' + version_folder + 'semantic_features_keyframe.lmdb'
+if not os.path.exists(working_path + 'cu_grounding_matching_features/' + version_folder):
+    os.makedirs(working_path + 'cu_grounding_matching_features/' + version_folder)  
 # CU instance matching feature paths
-out_path_jpg = working_path + 'cu_grounding_matching_features/' + 'instance_features_jpg.lmdb'
-out_path_kfrm = working_path + 'cu_grounding_matching_features/' + 'instance_features_keyframe.lmdb'
+out_path_jpg = working_path + 'cu_grounding_matching_features/' + version_folder + 'instance_features_jpg.lmdb'
+out_path_kfrm = working_path + 'cu_grounding_matching_features/' + version_folder + 'instance_features_keyframe.lmdb'
 
 
 #loading grounding pretrained model
@@ -112,8 +112,8 @@ print(datetime.now())
 
 
 #opening lmdb environment
-lmdb_env_jpg = lmdb.open(out_path_jpg, map_size=int(1e11), lock=False)
-lmdb_env_kfrm = lmdb.open(out_path_kfrm, map_size=int(1e11), lock=False)
+lmdb_env_jpg = lmdb.open(out_path_jpg_sem, map_size=int(1e11), lock=False)
+lmdb_env_kfrm = lmdb.open(out_path_kfrm_sem, map_size=int(1e11), lock=False)
 
 #about 1.5 hour
 print(datetime.now())
@@ -136,9 +136,9 @@ for i, key in enumerate(dict_obj_img):
             save_key = key+'/'+str(bb_id)
             with lmdb_env_jpg.begin(write=True) as lmdb_txn:
                 lmdb_txn.put(save_key.encode(), img_vec)
-    if TEST_MODE:
-        # [break] only for dockerization testing
-        break  
+    # [break] only for dockerization testing
+    #break   
+    
     sys.stderr.write("Stored for image {} / {} \r".format(i, len(dict_obj_img)))
 print(datetime.now())
  
@@ -165,9 +165,8 @@ for i, key in enumerate(dict_obj_kfrm):
             save_key = key+'/'+str(bb_id)
             with lmdb_env_kfrm.begin(write=True) as lmdb_txn:
                 lmdb_txn.put(save_key.encode(), img_vec)
-    if TEST_MODE:
-        # [break] only for dockerization testing
-        break   
+    # [break] only for dockerization testing
+    #break  
     sys.stderr.write("Stored for keyframe {} / {} \r".format(i, len(dict_obj_kfrm)))
 print(datetime.now())
 len(missed_children_jpg)
@@ -191,8 +190,8 @@ print(datetime.now())
 missed_children_jpg = []
 for i, key in enumerate(dict_obj_img):
     # Todo test
-#     if 'HC0005KMS' not in key: #or 'HC0001H01' in key:
-#         continue
+    #if 'HC0005KMS' not in key: #or 'HC0001H01' in key:
+    #    continue
     print(i,key)
 
     imgs,_ = fetch_img(key+'.jpg.ldcc', parent_dict, child_dict, path_dict, level = 'Child')
@@ -216,9 +215,8 @@ for i, key in enumerate(dict_obj_img):
             with lmdb_env_jpg.begin(write=True) as lmdb_txn:
                 lmdb_txn.put(save_key.encode(), img_vec_pred[j,:])
 #                 print(sum(img_vec_pred[j,:]))
-    if TEST_MODE:
-        # [break] only for dockerization testing
-        break    
+    # [break] only for dockerization testing
+    #break  
     sys.stderr.write("Stored for image {} / {} \r".format(i, len(dict_obj_img)))
 print(datetime.now())
 
@@ -238,9 +236,8 @@ for i, key in enumerate(dict_obj_kfrm):
             save_key = key+'/'+str(bb_id)
             with lmdb_env_kfrm.begin(write=True) as lmdb_txn:
                 lmdb_txn.put(save_key.encode(), img_vec_pred[j,:])
-    if TEST_MODE:
-        # [break] only for dockerization testing
-        break  
+    # [break] only for dockerization testing
+    #break  
     sys.stderr.write("Stored for keyframe {} / {} \r".format(i, len(dict_obj_kfrm)))
 print(datetime.now())
 

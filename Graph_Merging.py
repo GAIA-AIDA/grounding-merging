@@ -27,17 +27,19 @@ from aida_interchange.bounding_box import Bounding_Box
 # Specify data paths
 corpus_path = '/root/LDC/'
 working_path = '/root/shared/'
-TEST_MODE = True
+TEST_MODE = False #True
 if TEST_MODE:
     print("TEST_MODE is open")
 
 
 # Version Setting
 # Set evaluation version as the prefix folder
-version_folder = '' # 'E/' could be ignored if there is no version management
+usc_version_folder = 'dryrun/'
+version_folder = 'dryrun03/' # 'E/' could be ignored if there is no version management
 # Set run version as prefix
-p_f_run = '' # '_E1' could be ignored if there is no version management
-uiuc_run_folder = 'RPI_ttl/'
+p_f_run = 'dryrun'
+g_run = '_dryrun_updated03' # '_E1' could be ignored if there is no version management
+uiuc_run_folder = 'ttl_updated/'
 
 # Set the number of multiple processes
 processes_num = 32
@@ -51,15 +53,15 @@ parent_dict, child_dict = utils.create_dict(parent_child_tab)
 
 
 # CU visual grounding feature paths
-sem_img_path = working_path + 'cu_grounding_matching_features/' + 'semantic_features_jpg.lmdb'
-sem_kfrm_path = working_path + 'cu_grounding_matching_features/' + 'semantic_features_keyframe.lmdb'
+sem_img_path = working_path + 'cu_grounding_matching_features/' + version_folder + 'semantic_features_jpg.lmdb'
+sem_kfrm_path = working_path + 'cu_grounding_matching_features/' + version_folder + 'semantic_features_keyframe.lmdb'
 
 # CU instance matching feature paths
 ins_img_path = working_path + 'cu_grounding_matching_features/' + 'instance_features_jpg.lmdb'
 ins_kfrm_path = working_path + 'cu_grounding_matching_features/' + 'instance_features_keyframe.lmdb'
 
 # CU visual grounding result path
-grounding_dict_path = working_path + 'cu_grounding_results/' + version_folder + 'grounding_dict'+p_f_run+'.pickle'
+grounding_dict_path = working_path + 'cu_grounding_results/' + version_folder + 'grounding_dict'+g_run+'.pickle'
 print('Check Point: version change',grounding_dict_path)
 grounding_dict = pickle.load(open(grounding_dict_path,'rb'))
 # def top_dict(kv_dict, num = 2):
@@ -71,25 +73,26 @@ grounding_dict = pickle.load(open(grounding_dict_path,'rb'))
 
 # CU temporal ttl results
 cu_ttl_tmp_path = working_path + 'cu_ttl_tmp/'
-cu_ttl_path = cu_ttl_tmp_path + version_folder + 'm18' + p_f_run + '/'
-cu_ttl_ins_path = cu_ttl_tmp_path + version_folder + 'm18_i_c' + p_f_run + '/'
+cu_ttl_path = cu_ttl_tmp_path + version_folder + 'm36_' + p_f_run + '/'
+cu_ttl_ins_path = cu_ttl_tmp_path + version_folder + 'm36_i_c_' + p_f_run + '/'
 print('Check Point: cu_ttl_tmp_path change',cu_ttl_path,cu_ttl_ins_path)
 
 
 #UIUC text mention result paths
-txt_mention_ttl_path = working_path + 'uiuc_ttl_results/' + version_folder + uiuc_run_folder 
+txt_mention_ttl_path = working_path + 'uiuc_ttl_results/' + usc_version_folder + uiuc_run_folder 
 print('Check Point: text mention ttl path change',txt_mention_ttl_path)
 
 
 # USC visual grounding result path for merging
-usc_dict_path = working_path + 'usc_grounding_dict/' + version_folder + 'uscvision_grounding_output_cu_format' + p_f_run + '.pickle' 
+usc_dict_path = working_path + 'usc_grounding_dict/' + usc_version_folder + 'uscvision_grounding_output_cu_format' + p_f_run + '.pickle' 
 
 
 # Output: CU graph merging result
 # Output Paths
 # CU graph merging result path
-merged_graph_path = working_path + 'cu_graph_merging_ttl/' + version_folder + 'merged_ttl'+ p_f_run + '/'
-
+merged_graph_path = working_path + 'cu_graph_merging_ttl/' + version_folder + 'merged_ttl'+ g_run + '/'
+if not os.path.exists(merged_graph_path):
+    os.makedirs(merged_graph_path)
 
 # Merge USC grounding results
 def check_usc_grounding_dict(usc_grounding_dict, child_dict):
@@ -181,7 +184,8 @@ print('Check Point: USC gournding path change',usc_dict_path)
 rpi_entity_pref = 'http://www.isi.edu/gaia/entities/'
 gaia_prefix = 'http://www.isi.edu/gaia'
 # nist_ont_pref = '.../SM-KBP/2018/ontologies/InterchangeOntology#'
-nist_ont_pref = 'https://tac.nist.gov/tracks/SM-KBP/2019/ontologies/InterchangeOntology#'
+#nist_ont_pref = 'https://tac.nist.gov/tracks/SM-KBP/2019/ontologies/InterchangeOntology#'
+nist_ont_pref = 'https://raw.githubusercontent.com/NextCenturyCorporation/AIDA-Interchange-Format/master/java/src/main/resources/com/ncc/aif/ontologies/InterchangeOntology#'
 justified_by_ = URIRef(nist_ont_pref+'justifiedBy')
 entity_ = URIRef(nist_ont_pref+'Entity')
 sys_ = URIRef(nist_ont_pref+'system')

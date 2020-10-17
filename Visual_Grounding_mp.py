@@ -29,18 +29,19 @@ config = tf.ConfigProto(gpu_options=gpu_options,log_device_placement=True,allow_
 corpus_path = '/root/LDC/'
 working_path = '/root/shared/'
 model_path = '/root/models/'
-TEST_MODE = True
+TEST_MODE = False
 if TEST_MODE:
     print("TEST_MODE is open")
 
 
 # Version Setting
 # Set evaluation version as the prefix folder
-version_folder = '' # 'E/' could be ignored if there is no version management
+version_folder = 'dryrun03/' # 'E/' could be ignored if there is no version management
+uiuc_version_folder = 'dryrun/' 
 # Set run version as prefix and uiuc_run_folder
-p_f_run = '' # '_E1' could be ignored if there is no version management
+p_f_run = '_dryrun_updated03' # '_E1' could be ignored if there is no version management
 
-uiuc_run_folder = 'RPI_ttl/'
+uiuc_run_folder = 'ttl_updated/'
 
 
 # Input: LDC unpacked data, CU visual grounding and instance matching moodels, UIUC text mention results, CU object detection results
@@ -55,10 +56,10 @@ ltf_path = corpus_path + 'data/ltf/ltf/'
 
 
 #UIUC text mention result paths
-txt_mention_ttl_path = working_path + 'uiuc_ttl_results/' + version_folder + uiuc_run_folder # 1/7th May
+txt_mention_ttl_path = working_path + 'uiuc_ttl_results/' + uiuc_version_folder + uiuc_run_folder # 1/7th May
 pronouns_path = working_path + 'uiuc_asr_files/' + 'pronouns.txt'
-video_asr_path = working_path + 'uiuc_asr_files/' + version_folder +'ltf_asr/'
-video_map_path = working_path + 'uiuc_asr_files/' + version_folder +'map_asr/'
+video_asr_path = working_path + 'uiuc_asr_files/' + uiuc_version_folder +'ltf_asr/'
+video_map_path = working_path + 'uiuc_asr_files/' + uiuc_version_folder +'map_asr/'
 print('Check Point: text mentions path change',video_asr_path)
 
 
@@ -168,7 +169,7 @@ with open(det_results_path_kfrm, 'rb') as f:
     dict_obj.update(pickle.load(f))
 print('Loading done.')
 
-print('Loading AIF crawl dictionaries...')
+'''print('Loading AIF crawl dictionaries...')
 with open(entity2mention_dict_path, 'rb') as f:
     en2men = pickle.load(f)
 
@@ -178,7 +179,7 @@ with open(id2mentions_dict_path, 'rb') as f:
 # Check Point: en2men and id2men maybe None
 print('en2men len:', len(en2men.keys()))
 print('id2men len:', len(id2men.keys()))
-print(datetime.now())
+print(datetime.now())'''
 
 # maybe changed: turtle_files comes from UIUC, .ttl maybe changed 
 # about 1 hour 15 min
@@ -276,13 +277,14 @@ print(datetime.now())
 #grounding, entity level
 print(datetime.now())
 # Todo: adjust parameters
-en_score_thr = .5 #.9
+en_score_thr = .85 #.9
 sen_score_thr = .6 #.6
 suffix_tmp = p_f_run + '_5-6'
 
 en_to_img_dict = {}
 img_to_feat_dict = {}
 img_cnt_dict = {}
+event_info ={} 
 for k,key in enumerate(id2men):
     if TEST_MODE and k > 200:
         # [break] only for dockerization testing
@@ -306,6 +308,12 @@ for k,key in enumerate(id2men):
     for i,sen in enumerate(sen_batch):
         #if sen_score[i] < sen_score_thr:
         #    continue
+        if not text_flag: 
+            print(type(sen_score[i]),sen_score[i])
+            if img_info_batch[i][0] in list(event_info.keys()): 
+                event_info[img_info_batch[i][0]].append({'score':sen_score[i], 'sentence':sen})                
+            else: 
+                event_info[img_info_batch[i][0]] = [{'score':sen_score[i], 'sentence':sen}]  
         for entity in id2men[key][sen]:
             en_name = id2men[key][sen][entity]['name']
             if en_name.lower() in pronouns:
@@ -361,7 +369,8 @@ for k,key in enumerate(id2men):
                     en_to_img_dict[entity]['mentions'][mention]['grounding'].update(men_dict[mention]['grounding'])
 sess.close()
 
-
+#with open(working_path+'event_info_eval_'+str(en_score_thr)+'.pickle', 'wb') as f:
+#    pickle.dump(event_info,f, protocol=pickle.HIGHEST_PROTOCOL)  
 print('Grounding done.\nAveraging textual features to shape entity features...')
 #averaging mention features to shape entity features
 for entity in en_to_img_dict:
@@ -441,4 +450,3 @@ open(grounding_log_path, 'w').write('\nVisual Grounding Finished.')
 print(datetime.now())
 
 print('Visual Grounding and Instance Matching Finished.')
-
