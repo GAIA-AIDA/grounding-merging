@@ -79,10 +79,14 @@ matching_model_path = model_path + 'model_universal_no_recons_ins_only'
 # CU Visual grounding dict files for USC
 entity2mention_dict_path = working_path + 'cu_grounding_dict_files/' + version_folder + 'entity2mention_dict'+p_f_run+'.pickle'
 id2mentions_dict_path = working_path + 'cu_grounding_dict_files/' + version_folder + 'id2mentions_dict'+p_f_run+'.pickle'
+if not os.path.exists(working_path + 'cu_grounding_dict_files/' + version_folder):
+    os.makedirs(working_path + 'cu_grounding_dict_files/' + version_folder)
 
 # CU Visual grounding result paths
 grounding_dict_path = working_path + 'cu_grounding_results/' + version_folder + 'grounding_dict'+p_f_run+'.pickle'
 grounding_log_path = working_path + 'cu_grounding_results/' + version_folder + 'log_grounding'+p_f_run+'.txt'
+if not os.path.exists(working_path + 'cu_grounding_results/' + version_folder):
+    os.makedirs(working_path + 'cu_grounding_results/' + version_folder)
 
 
 
