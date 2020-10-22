@@ -41,6 +41,7 @@ az_obj_kf = sys.argv[4]
 ins_img_path = sys.argv[5]
 ins_kf_path = sys.argv[6]
 ere_link = sys.argv[7]
+#video_map = sys.argv[8]
 dataName = sys.argv[8]
 
 
@@ -78,7 +79,7 @@ for x,y in entity_dict.items():
     data = x.split('/')
     #print data
     entity_dic2[data[-2]].append(data[-1])
-#print(entity_dic2)
+#print('entity_dic2: ',entity_dic2)
 #for x,y in entity_dic2.items():
 #    print x,y[0]
 #    break
@@ -92,14 +93,14 @@ with open(az_obj_jpg, 'rb') as handle:
 
 
 # In[5]:
-""" 
+#""" 
 
 with open(az_obj_kf, 'rb') as handle:
     ODF_result = pickle.load(handle)
 
 
 # In[6]: 
-"""
+#"""
 
 
 
@@ -136,7 +137,7 @@ for key, value in lmdb_cursor:
 #""" 
 
 
-"""
+#"""
 ins_kf_env = lmdb.open(ins_kf_path, map_size=1e11, readonly=True, lock=False)
 #print(ins_img_env)
 ins_kf_txn = ins_kf_env.begin(write=False)
@@ -146,7 +147,7 @@ lmdb_cursor2 = ins_kf_txn.cursor()
 
 
 
-
+#video
 
 for key, value in lmdb_cursor2:
     #datum.ParseFromString(value)
@@ -157,13 +158,13 @@ for key, value in lmdb_cursor2:
     data = str(key).split('/')  
     file_id = str(data[0])
     num = data[1]
-    print(file_id,num)
-
+    #print(file_id,num)
+    idNoNum = file_id.split('_')[0]
     if num in entity_dic2[file_id]:
-        parentDic[parent[data[0]]].append((key,value))
+        parentDic[parent[idNoNum]].append((key,value))
 
-print(parentDic) 
-"""
+#print(parentDic) 
+#"""
 # In[7]:
 
 
@@ -203,7 +204,7 @@ images=0
 i=0
 
 typeList = ['Weapon','Vehicle','Person','Facility']
-threshold = {'Person': 0.72, 'Vehicle': 0.7, 'Weapon': 0.7, 'Facility': 0.7}
+
 count = 0
 for x, y in tqdm(parentDic.items()):
 
@@ -237,6 +238,8 @@ for x, y in tqdm(parentDic.items()):
                 #continue
             data = key.split('/')
             #print ere_type[ODF_result[data[0]][int(data[1])]['label']]
+            if ODF_result[data[0]][int(data[1])]['label'] not in ere_type.keys():
+                continue
             if ere_type[ODF_result[data[0]][int(data[1])]['label']] not in typeList:
                 continue
             
@@ -270,7 +273,7 @@ for x, y in tqdm(parentDic.items()):
         normed_matrix_T = np.transpose(normed_matrix)
         n_array =  np.matmul(normed_matrix,normed_matrix_T )
 
-        db = DBSCAN(eps=0.3, min_samples=2, metric='cosine', n_jobs = 1).fit(new_array)
+        db = DBSCAN(eps=0.5, min_samples=2, metric='cosine', n_jobs = 1).fit(new_array)
         core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
         core_samples_mask[db.core_sample_indices_] = True
         labels = db.labels_
@@ -292,10 +295,13 @@ for x, y in tqdm(parentDic.items()):
                 #print firstMem
                 if firstMem[labels[j]] == 0:
                     firstMem[labels[j]] = 1
-                    clusterNameDic[labels[j]] = aifutils.make_cluster_with_prototype(g,                         "http://www.columbia.edu/AIDA/DVMM/Clusters/ObjectCoreference/RUN00010/"+                        a+'/'+str(labels[j]),entityList[a][j], sys_instance_matching)
+                    clusterNameDic[labels[j]] = aifutils.make_cluster_with_prototype(g, \
+                        "http://www.columbia.edu/AIDA/DVMM/Clusters/ObjectCoreference/RUN00010/"+ \
+                         a+'/'+str(labels[j]),entityList[a][j], sys_instance_matching)
                     #print entityList[a][j]
                 else:
-                    aifutils.mark_as_possible_cluster_member(g,                                 entityList[a][j],clusterNameDic[labels[j]], score, sys_instance_matching)
+                    aifutils.mark_as_possible_cluster_member(g,\
+                     entityList[a][j],clusterNameDic[labels[j]], score, sys_instance_matching)
                     #print entityList[a][j]
 
     #dataName = 'post_e_i_c'
